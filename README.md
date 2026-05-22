@@ -31,6 +31,16 @@ Day 3 established the backend foundation.
 - Health route: [backend/app/api/routes/health.py](backend/app/api/routes/health.py)
 - Reflection notes: [docs/reflections/day-03.md](docs/reflections/day-03.md)
 
+## Day 4 Status
+
+Day 4 established the initial database design.
+
+- SQLAlchemy base/session: [backend/app/db](backend/app/db)
+- Domain models: [backend/app/models](backend/app/models)
+- Alembic migration setup: [backend/migrations](backend/migrations)
+- Initial schema migration: [backend/migrations/versions/0001_initial_intelligence_schema.py](backend/migrations/versions/0001_initial_intelligence_schema.py)
+- Reflection notes: [docs/reflections/day-04.md](docs/reflections/day-04.md)
+
 ## Target System Flow
 
 ```text
@@ -111,6 +121,12 @@ pip install -r backend/requirements.txt
 python -m pytest
 ```
 
+Run database migrations:
+
+```bash
+alembic upgrade head
+```
+
 Run frontend directly:
 
 ```bash
@@ -127,4 +143,19 @@ frontend/     React dashboard and research interface
 infra/        Local infrastructure notes and future deployment material
 scripts/      Repeatable developer/demo commands
 docs/         Architecture notes and learning reflections
+```
+
+## Initial Data Model
+
+```text
+RawDocument
+    |
+    v
+FinancialEvent <-> Entity
+    |
+    +-> Embedding
+    |
+    +-> NarrativeCluster
+
+JobRun tracks pipeline execution and failures.
 ```
