@@ -6,10 +6,30 @@ The project is not a stock predictor, trading bot, budgeting app, or generic AI 
 
 ## Day 1 Status
 
-Day 1 establishes the product boundary and architecture before implementation begins.
+Day 1 established the product boundary and architecture before implementation begins.
 
 - MVP definition: [docs/day-01-product-architecture.md](docs/day-01-product-architecture.md)
 - Reflection notes: [docs/reflections/day-01.md](docs/reflections/day-01.md)
+
+## Day 2 Status
+
+Day 2 established the repo and local tooling structure.
+
+- Backend service skeleton: [backend](backend)
+- Frontend service skeleton: [frontend](frontend)
+- Infrastructure notes: [infra/README.md](infra/README.md)
+- Script placeholders: [scripts/README.md](scripts/README.md)
+- Reflection notes: [docs/reflections/day-02.md](docs/reflections/day-02.md)
+
+## Day 3 Status
+
+Day 3 established the backend foundation.
+
+- FastAPI app factory: [backend/app/main.py](backend/app/main.py)
+- Environment config: [backend/app/core/config.py](backend/app/core/config.py)
+- Structured logging: [backend/app/core/logging.py](backend/app/core/logging.py)
+- Health route: [backend/app/api/routes/health.py](backend/app/api/routes/health.py)
+- Reflection notes: [docs/reflections/day-03.md](docs/reflections/day-03.md)
 
 ## Target System Flow
 
@@ -53,3 +73,58 @@ Expand the system
 ```
 
 The goal is to build a working product while developing interview-ready understanding of backend systems, distributed processing, AI workflows, search, data engineering, and production-style infrastructure.
+
+## Local Setup
+
+Prerequisites:
+
+- Docker Desktop or compatible Docker runtime
+- Python 3.12 for direct backend development
+- Node.js 20 or newer for direct frontend development
+
+Create local environment config:
+
+```bash
+cp .env.example .env
+```
+
+Run the full local stack:
+
+```bash
+docker compose up --build
+```
+
+Expected local services:
+
+- Backend API: `http://localhost:8000`
+- Backend health check: `http://localhost:8000/health`
+- Frontend dashboard: `http://localhost:3000`
+- PostgreSQL: `localhost:5432`
+- Redis: `localhost:6379`
+
+Run backend tests directly:
+
+```bash
+python3.12 -m venv .venv
+source .venv/bin/activate
+pip install -r backend/requirements.txt
+python -m pytest
+```
+
+Run frontend directly:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+## Repository Structure
+
+```text
+backend/      FastAPI API, domain services, worker code, tests
+frontend/     React dashboard and research interface
+infra/        Local infrastructure notes and future deployment material
+scripts/      Repeatable developer/demo commands
+docs/         Architecture notes and learning reflections
+```
