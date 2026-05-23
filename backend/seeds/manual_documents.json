@@ -1,0 +1,62 @@
+[
+  {
+    "source_name": "seed",
+    "title": "NVIDIA reports stronger data center demand",
+    "body": "NVIDIA reported stronger-than-expected data center revenue as cloud providers continued spending on AI infrastructure. Management said demand for accelerated computing remains broad across hyperscale customers.",
+    "source_url": "seed://earnings/nvidia-data-center-demand",
+    "ingestion_metadata": {
+      "category": "earnings",
+      "theme": "ai infrastructure"
+    }
+  },
+  {
+    "source_name": "seed",
+    "title": "Federal Reserve officials signal caution on rate cuts",
+    "body": "Federal Reserve officials signaled caution on near-term rate cuts after inflation data remained firmer than expected. Markets reduced expectations for aggressive easing as policymakers emphasized data dependence.",
+    "source_url": "seed://macro/fed-rate-cut-caution",
+    "ingestion_metadata": {
+      "category": "macro",
+      "theme": "interest rates"
+    }
+  },
+  {
+    "source_name": "seed",
+    "title": "Regional bank shares fall on deposit pressure concerns",
+    "body": "Regional bank shares declined after analysts warned that deposit costs and commercial real estate exposure could pressure profitability. Investors focused on funding stability and credit quality across smaller lenders.",
+    "source_url": "seed://banking/regional-bank-deposit-pressure",
+    "ingestion_metadata": {
+      "category": "banking",
+      "theme": "banking stress"
+    }
+  },
+  {
+    "source_name": "seed",
+    "title": "Cloud providers increase AI infrastructure spending plans",
+    "body": "Major cloud providers increased capital spending plans tied to AI infrastructure, including data centers, networking equipment, and GPU capacity. Suppliers tied to accelerated computing moved higher after the updates.",
+    "source_url": "seed://ai/cloud-capex-expansion",
+    "ingestion_metadata": {
+      "category": "ai infrastructure",
+      "theme": "cloud capex"
+    }
+  },
+  {
+    "source_name": "seed",
+    "title": "Semiconductor equipment orders improve on memory recovery",
+    "body": "Semiconductor equipment orders improved as memory manufacturers prepared for a recovery in demand. Analysts said AI-related workloads and inventory normalization were supporting expectations for higher capital spending.",
+    "source_url": "seed://semiconductors/equipment-orders-memory-recovery",
+    "ingestion_metadata": {
+      "category": "semiconductors",
+      "theme": "memory recovery"
+    }
+  },
+  {
+    "source_name": "seed",
+    "title": "Oil prices rise after supply disruption concerns",
+    "body": "Oil prices rose after supply disruption concerns outweighed softer demand indicators. Energy traders monitored geopolitical risk and inventory reports as crude benchmarks moved higher.",
+    "source_url": "seed://energy/oil-supply-disruption-concerns",
+    "ingestion_metadata": {
+      "category": "energy",
+      "theme": "oil supply"
+    }
+  }
+]

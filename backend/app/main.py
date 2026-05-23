@@ -4,6 +4,7 @@ from time import perf_counter
 from fastapi import FastAPI, Request
 
 from app.api.routes.health import router as health_router
+from app.api.routes.ingestion import router as ingestion_router
 from app.core.config import get_settings
 from app.core.logging import configure_logging
 
@@ -39,6 +40,7 @@ def create_app() -> FastAPI:
         return response
 
     app.include_router(health_router)
+    app.include_router(ingestion_router)
 
     logger.info(
         "application started",

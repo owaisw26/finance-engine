@@ -1,9 +1,18 @@
-from datetime import datetime
+from __future__ import annotations
 
-from sqlalchemy import ForeignKey, Index, String, Table, Text, Column
+from datetime import datetime
+from typing import TYPE_CHECKING
+
+from sqlalchemy import Column, ForeignKey, Index, String, Table, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
+
+if TYPE_CHECKING:
+    from app.models.embedding import Embedding
+    from app.models.entity import Entity
+    from app.models.narrative import NarrativeCluster
+    from app.models.raw_document import RawDocument
 
 event_entities = Table(
     "event_entities",
@@ -11,7 +20,6 @@ event_entities = Table(
     Column("event_id", ForeignKey("financial_events.id"), primary_key=True),
     Column("entity_id", ForeignKey("entities.id"), primary_key=True),
 )
-
 
 class FinancialEvent(Base):
     __tablename__ = "financial_events"

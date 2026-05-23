@@ -41,6 +41,16 @@ Day 4 established the initial database design.
 - Initial schema migration: [backend/migrations/versions/0001_initial_intelligence_schema.py](backend/migrations/versions/0001_initial_intelligence_schema.py)
 - Reflection notes: [docs/reflections/day-04.md](docs/reflections/day-04.md)
 
+## Day 5 Status
+
+Day 5 established manual ingestion.
+
+- Manual ingestion route: [backend/app/api/routes/ingestion.py](backend/app/api/routes/ingestion.py)
+- Ingestion service: [backend/app/services/ingestion.py](backend/app/services/ingestion.py)
+- Ingestion schemas: [backend/app/schemas/ingestion.py](backend/app/schemas/ingestion.py)
+- Seed documents: [backend/seeds/manual_documents.json](backend/seeds/manual_documents.json)
+- Reflection notes: [docs/reflections/day-05.md](docs/reflections/day-05.md)
+
 ## Target System Flow
 
 ```text
@@ -111,6 +121,18 @@ Expected local services:
 - Frontend dashboard: `http://localhost:3000`
 - PostgreSQL: `localhost:5432`
 - Redis: `localhost:6379`
+
+Manual ingestion endpoint:
+
+```bash
+curl -X POST http://localhost:8000/ingest/manual \
+  -H "Content-Type: application/json" \
+  -d '{
+    "source_name": "manual",
+    "title": "NVIDIA reports stronger data center demand",
+    "body": "NVIDIA reported stronger-than-expected data center revenue as cloud providers continued spending on AI infrastructure."
+  }'
+```
 
 Run backend tests directly:
 
