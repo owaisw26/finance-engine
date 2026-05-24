@@ -8,3 +8,7 @@ Planned scripts:
 - `run_ingestion`
 - `smoke_test`
 - `record_demo_checklist`
+
+Current scripts:
+
+- `ingestion_smoke_check.py`: calls the running local API to verify manual ingestion, duplicate handling, and RSS ingestion.

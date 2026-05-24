@@ -60,6 +60,14 @@ Day 6 established the first external source connector.
 - Shared ingestion service: [backend/app/services/ingestion.py](backend/app/services/ingestion.py)
 - Reflection notes: [docs/reflections/day-06.md](docs/reflections/day-06.md)
 
+## Day 7 Status
+
+Day 7 documented and verified the ingestion checkpoint.
+
+- Ingestion architecture note: [docs/ingestion-architecture.md](docs/ingestion-architecture.md)
+- Ingestion smoke script: [scripts/ingestion_smoke_check.py](scripts/ingestion_smoke_check.py)
+- Reflection notes: [docs/reflections/day-07.md](docs/reflections/day-07.md)
+
 ## Target System Flow
 
 ```text
@@ -152,7 +160,13 @@ curl -X POST http://localhost:8000/ingest/run \
     "feed_url": "https://www.sec.gov/news/pressreleases.rss",
     "source_name": "SEC Press Releases",
     "limit": 5
-  }'
+}'
+```
+
+Run the ingestion smoke check against a running local API:
+
+```bash
+python scripts/ingestion_smoke_check.py
 ```
 
 Run backend tests directly:
