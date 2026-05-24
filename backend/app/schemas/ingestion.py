@@ -21,3 +21,28 @@ class ManualIngestionResponse(BaseModel):
     content_hash: str
     title: str
     summary: str | None
+
+
+class RssIngestionRequest(BaseModel):
+    feed_url: str = Field(min_length=1, max_length=1000)
+    source_name: str | None = Field(default=None, max_length=120)
+    limit: int = Field(default=10, ge=1, le=50)
+
+
+class RssIngestedItem(BaseModel):
+    status: Literal["created", "duplicate", "skipped"]
+    title: str
+    raw_document_id: str | None = None
+    financial_event_id: str | None = None
+    source_url: str | None = None
+    reason: str | None = None
+
+
+class RssIngestionResponse(BaseModel):
+    feed_url: str
+    source_name: str
+    fetched_count: int
+    created_count: int
+    duplicate_count: int
+    skipped_count: int
+    items: list[RssIngestedItem]

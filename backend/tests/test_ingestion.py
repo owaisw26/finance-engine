@@ -106,3 +106,97 @@ def test_manual_ingestion_is_idempotent(
     assert db_session.query(RawDocument).count() == 1
     assert db_session.query(FinancialEvent).count() == 1
     assert db_session.query(JobRun).count() == 1
+
+
+def test_rss_ingestion_creates_documents_events_and_jobs(
+    client: TestClient,
+    db_session: Session,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    rss_xml = """<?xml version="1.0"?>
+    <rss version="2.0">
+      <channel>
+        <title>Market Intelligence Feed</title>
+        <item>
+          <title>Semiconductor equipment orders improve</title>
+          <link>https://example.com/semis</link>
+          <description>Semiconductor equipment orders improved as memory manufacturers prepared for a recovery in demand.</description>
+          <pubDate>Fri, 22 May 2026 09:00:00 GMT</pubDate>
+        </item>
+        <item>
+          <title>Regional bank shares fall on deposit concerns</title>
+          <link>https://example.com/banks</link>
+          <description>Regional bank shares declined after analysts warned that deposit costs could pressure profitability.</description>
+          <pubDate>Fri, 22 May 2026 10:00:00 GMT</pubDate>
+        </item>
+      </channel>
+    </rss>
+    """
+
+    def fake_fetch(feed_url: str, timeout_seconds: int) -> str:
+        assert feed_url == "https://example.com/feed.xml"
+        assert timeout_seconds == 10
+        return rss_xml
+
+    monkeypatch.setattr("app.services.ingestion.fetch_rss_xml", fake_fetch)
+
+    response = client.post(
+        "/ingest/run",
+        json={"feed_url": "https://example.com/feed.xml", "limit": 10},
+    )
+
+    assert response.status_code == 200
+    data = response.json()
+    assert data["source_name"] == "Market Intelligence Feed"
+    assert data["fetched_count"] == 2
+    assert data["created_count"] == 2
+    assert data["duplicate_count"] == 0
+    assert data["skipped_count"] == 0
+    assert [item["status"] for item in data["items"]] == ["created", "created"]
+    assert db_session.query(RawDocument).count() == 2
+    assert db_session.query(FinancialEvent).count() == 2
+    assert db_session.query(JobRun).count() == 2
+    assert {job.job_type for job in db_session.query(JobRun).all()} == {"rss_ingestion"}
+
+
+def test_rss_ingestion_deduplicates_feed_items(
+    client: TestClient,
+    db_session: Session,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    rss_xml = """<?xml version="1.0"?>
+    <rss version="2.0">
+      <channel>
+        <title>Market Intelligence Feed</title>
+        <item>
+          <title>Oil prices rise after supply disruption concerns</title>
+          <link>https://example.com/oil</link>
+          <description>Oil prices rose after supply disruption concerns outweighed softer demand indicators.</description>
+        </item>
+      </channel>
+    </rss>
+    """
+
+    monkeypatch.setattr(
+        "app.services.ingestion.fetch_rss_xml",
+        lambda feed_url, timeout_seconds: rss_xml,
+    )
+
+    first_response = client.post(
+        "/ingest/run",
+        json={"feed_url": "https://example.com/feed.xml"},
+    )
+    second_response = client.post(
+        "/ingest/run",
+        json={"feed_url": "https://example.com/feed.xml"},
+    )
+
+    assert first_response.status_code == 200
+    assert first_response.json()["created_count"] == 1
+    assert second_response.status_code == 200
+    assert second_response.json()["created_count"] == 0
+    assert second_response.json()["duplicate_count"] == 1
+    assert second_response.json()["items"][0]["status"] == "duplicate"
+    assert db_session.query(RawDocument).count() == 1
+    assert db_session.query(FinancialEvent).count() == 1
+    assert db_session.query(JobRun).count() == 1

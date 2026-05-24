@@ -17,6 +17,7 @@ class Settings(BaseSettings):
     )
     redis_url: str = "redis://localhost:6379/0"
     ai_provider: str = "fallback"
+    rss_request_timeout_seconds: int = 10
 
     model_config = SettingsConfigDict(
         env_file=".env",

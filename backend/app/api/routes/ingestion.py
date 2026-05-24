@@ -1,9 +1,17 @@
-from fastapi import APIRouter, Depends, Response, status
+from urllib.error import URLError
+
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 
+from app.core.config import Settings, get_settings
 from app.db.session import get_db
-from app.schemas.ingestion import ManualIngestionRequest, ManualIngestionResponse
-from app.services.ingestion import create_manual_ingestion
+from app.schemas.ingestion import (
+    ManualIngestionRequest,
+    ManualIngestionResponse,
+    RssIngestionRequest,
+    RssIngestionResponse,
+)
+from app.services.ingestion import create_manual_ingestion, create_rss_ingestion
 
 router = APIRouter(prefix="/ingest", tags=["ingestion"])
 
@@ -31,4 +39,35 @@ def ingest_manual(
         content_hash=result.raw_document.content_hash,
         title=result.financial_event.title,
         summary=result.financial_event.summary,
+    )
+
+
+@router.post("/run", response_model=RssIngestionResponse)
+def run_rss_ingestion(
+    payload: RssIngestionRequest,
+    db: Session = Depends(get_db),
+    settings: Settings = Depends(get_settings),
+) -> RssIngestionResponse:
+    try:
+        result = create_rss_ingestion(
+            db=db,
+            feed_url=payload.feed_url,
+            source_name=payload.source_name,
+            limit=payload.limit,
+            timeout_seconds=settings.rss_request_timeout_seconds,
+        )
+    except (ValueError, URLError, TimeoutError) as exc:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail=f"RSS ingestion failed: {exc}",
+        ) from exc
+
+    return RssIngestionResponse(
+        feed_url=result.feed_url,
+        source_name=result.source_name,
+        fetched_count=result.fetched_count,
+        created_count=result.created_count,
+        duplicate_count=result.duplicate_count,
+        skipped_count=result.skipped_count,
+        items=result.items,
     )

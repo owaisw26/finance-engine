@@ -51,6 +51,15 @@ Day 5 established manual ingestion.
 - Seed documents: [backend/seeds/manual_documents.json](backend/seeds/manual_documents.json)
 - Reflection notes: [docs/reflections/day-05.md](docs/reflections/day-05.md)
 
+## Day 6 Status
+
+Day 6 established the first external source connector.
+
+- RSS ingestion endpoint: [backend/app/api/routes/ingestion.py](backend/app/api/routes/ingestion.py)
+- RSS parser/fetcher: [backend/app/services/rss_connector.py](backend/app/services/rss_connector.py)
+- Shared ingestion service: [backend/app/services/ingestion.py](backend/app/services/ingestion.py)
+- Reflection notes: [docs/reflections/day-06.md](docs/reflections/day-06.md)
+
 ## Target System Flow
 
 ```text
@@ -131,6 +140,18 @@ curl -X POST http://localhost:8000/ingest/manual \
     "source_name": "manual",
     "title": "NVIDIA reports stronger data center demand",
     "body": "NVIDIA reported stronger-than-expected data center revenue as cloud providers continued spending on AI infrastructure."
+}'
+```
+
+RSS ingestion endpoint:
+
+```bash
+curl -X POST http://localhost:8000/ingest/run \
+  -H "Content-Type: application/json" \
+  -d '{
+    "feed_url": "https://www.sec.gov/news/pressreleases.rss",
+    "source_name": "SEC Press Releases",
+    "limit": 5
   }'
 ```
 
